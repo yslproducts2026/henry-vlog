@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy to VPS
+      - name: Deploy files to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: 35.212.185.16
@@ -19,13 +19,15 @@ jobs:
           source: "."
           target: /home/yslproducts2026/henry-vlog
           strip_components: 0
+          overwrite: true
+          timeout: 120s
 
-      - name: Pull latest on VPS
+      - name: Verify deployment
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 35.212.185.16
           username: yslproducts2026
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /home/yslproducts2026/henry-vlog
-            git pull origin main
+            ls -la /home/yslproducts2026/henry-vlog/
+            echo "Deployment complete!"
